@@ -18,9 +18,12 @@ public class ein_bild_hochladen extends SpringStepBase {
 
     @Gegebensei("ein hochzuladendes Bild")
     public void einHochzuladendesBild() {
-        //TODO
+        //TODO: Dynamisches Auslesen des Pfadnamens
         testUploadFile = new File("/Users/sebmaster/Projects/backend/src/test/resources/pictures/test.png");
     }
+
+    //TODO: Datenbank nach den Tests wieder löschen
+    //TODO: Daten als Testdaten kennzeichnen
 
     @Wenn("das Bild erfolgreich hochgeladen wurde")
     public void dasBildErfolgreichHochgeladenWurde() {
@@ -39,6 +42,6 @@ public class ein_bild_hochladen extends SpringStepBase {
     @Dann("soll das Bild abrufbar sein")
     public void sollDasBildAbrufbarSein() {
         String s = validatableResponse.extract().body().toString();
-        given().when().get("5de7ee6b0dc68e44824fa5d").then().assertThat().statusCode(HttpStatus.SC_OK);
+        given().when().get("5de7ee6b0dc68e44824fa5d0").then().assertThat().statusCode(HttpStatus.SC_OK);
     }
 }
