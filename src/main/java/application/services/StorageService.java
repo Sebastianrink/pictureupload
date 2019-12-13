@@ -16,7 +16,7 @@ import java.util.Optional;
 public class StorageService {
     @Autowired
     PhotoRepo photoRepo;
-
+    //TODO: GRIDFS benutzen wenn Files > 16MB
     public ObjectId store(MultipartFile file) throws IOException {
         Photo photo = new Photo();
         photo.setName(LocalDateTime.now().toString());
