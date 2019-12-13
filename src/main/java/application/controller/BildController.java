@@ -4,6 +4,8 @@ import application.model.Photo;
 import application.services.StorageService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.bson.BsonBinarySubType;
+import org.bson.types.Binary;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -45,10 +47,14 @@ public class BildController {
                     .body(new ByteArrayResource(photoById.get().getImageFile().getData()));
     }
 
-    @PostMapping
-    public ResponseEntity<?> handleFileUpload(@RequestParam("file") MultipartFile file) throws IOException {
+    //https://stackoverflow.com/questions/49217373/spring-boot-send-requestbody-and-requestparam
+    //https://stackoverflow.com/questions/49845355/spring-boot-controller-upload-multipart-and-json-to-dto
+    //momentan in Postman nicht möglich
+    @PostMapping(consumes = {"multipart/form-data"})
+    public ResponseEntity<?> handleFileUpload(@RequestPart Photo photo, @RequestPart("file") MultipartFile file) throws IOException {
         log.info(String.format("upload-start /picture/ (%s bytes)", file.getSize()));
-        ObjectId store = storageService.store(file);
+        photo.setImageFile( new Binary(BsonBinarySubType.BINARY, file.getBytes()));
+        ObjectId store = storageService.store(photo);
         //Spring ServletUri Componentbuilder
         URI location = fromCurrentRequest().path("/{id}").buildAndExpand(store).toUri();
         log.info(String.format("upload finished %s", location));

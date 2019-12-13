@@ -30,4 +30,9 @@ public class StorageService {
     public Optional<Photo> getPhotoById(String photoId) {
         return photoRepo.findById(photoId);
     }
+
+    public ObjectId store(Photo photo) {
+        photo = photoRepo.save(photo);
+        return photo.getId();
+    }
 }

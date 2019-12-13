@@ -5,6 +5,8 @@ import io.cucumber.java.de.Dann;
 import io.cucumber.java.de.Gegebensei;
 import io.cucumber.java.de.Wenn;
 import io.restassured.RestAssured;
+import io.restassured.builder.MultiPartSpecBuilder;
+import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
 import org.apache.http.HttpStatus;
 import org.springframework.util.ResourceUtils;
@@ -31,12 +33,21 @@ public class Ein_bild_hochladen extends SpringStepBase {
 
     //TODO: Datenbank nach den Tests wieder löschen
     //TODO: Daten als Testdaten kennzeichnen
+    //GGF nochmal nach der Version suchen bei der ein Komplexes Object zum upload verwendet wurde, kein
+    // Multipart
     @Wenn("das Bild erfolgreich hochgeladen wurde")
     public void dasBildErfolgreichHochgeladenWurde() {
-        RestAssured.baseURI ="http://localhost:8080/picture";
+        RestAssured.baseURI = "http://localhost:8080/picture";
+        File test = new File("/Users/sebmaster/Downloads/test.json");
+
         validatableResponse = given()
                 .multiPart(picture)
-                .formParam("form", picture.getAbsolutePath())
+                .multiPart(new MultiPartSpecBuilder(test).fileName("test.jpg")
+                        .controlName("photo")
+                        .mimeType("application/json")
+                        .build())
+                .contentType("multipart/form-data")
+                .formParam("file", picture.getAbsolutePath())
                 .when()
                 .post()
                 .then()
